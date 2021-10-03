@@ -1,0 +1,20 @@
+.grid-container {
+}
+
+.result-panel {
+    display: inline-block;
+}
+
+#map {
+    display: inline-block;
+}
+#showListings {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#listWorstEcoCars {
+    grid-column: 1;
+    grid-row: 2;
+}
+

@@ -1,0 +1,225 @@
+<script src="us-map-1.0.1/lib/jquery-3.6.0.min.js"></script>
+<script src="us-map-1.0.1/lib/raphael.js"></script>
+<script src="us-map-1.0.1/jquery.usmap.js"></script>
+<script src="jquery.canvasjs.min.js"></script>
+<script src="map.js"></script>
+<script src="show-ecograph.js"></script>
+<script src="show-wagegraph.js"></script>
+<script src="show-pricetrendsgraph.js"></script>
+<html>
+   <head><link rel="stylesheet" href="style.css"></head>
+   <body>
+	<div class="grid-container">
+
+		
+		<div id="showListings" class="query">
+			<h2> Get all listings for state</h2>
+			<h4>Click a state on the map or enter its name in the text box to see
+				all Craigslist listings for used cars in this state!
+			</h4>
+			<form name="listings" action="getListingsAndModelsForState.php" method="post"
+			target="listings-results">
+			State: <input class="state-input" id="listings-state-input" type="text" name="state"> <br/>
+			<input type="submit">
+			</form>
+			<div class="map" id="listings-map" style="width: 500px; height: 300;"></div>
+			<iframe class="result-panel" id="listings-results" name="listings-results" width=400px height=300px></iframe>
+		</div> 
+	
+		<br/><br/>
+
+		<div id="listWorstEcoCars" class="query">
+			<h2> Click to get a list of the least-ecofriendly (based on CO2 emissions) cars 
+				each manufacturer produces!</h2>
+			<h4> Click on the Show Graph button after clicking Submit to generate a graph of the data! </h4>
+			<form name="least-ecofriendly" action="getMaxCO2VehicleForManufacturers.php" method="post"
+			target="eco-results">
+				<input type="submit">
+				<button id="show-ecograph-button" onclick="displayEcoChart()">Show graph!</button>
+			</form>
+			<iframe class="result-panel" id="eco-results" name="eco-results" width=400px height=300px></iframe>
+			<div id="eco-chart" style="height: 370px; width: 60%;"></div>
+		</div>
+
+		<br/><br/>
+
+		<div id="averageCombinedMPGForState" class="query">
+			<h2> Average MPG of cars in a given state</h2>
+			<h4>Click a state on the map or enter its name in the text box to see
+				the results of the query!
+			</h4>
+			<form name="averagempg" action="getAverageCombinedMPGForState.php" method="post"
+			target="avg-mpg-results">
+				State: <input class="state-input" id="mpg-state-input" type="text" name="state"> <br/>
+				<input type="submit">
+			</form>
+			<div class="map" id="mpg-map" style="width: 500px; height: 300px;"></div>
+			<iframe class="result-panel" id="avg-mpg-results" name="avg-mpg-results" width=150px height=100px></iframe>
+		</div>
+
+		<div id="averagePriceForMake" class="query">
+			<h2> Average price for cars of a given make</h2>
+			<h4> Select a given make to see what the average car from this manufacturer 
+				is going for on Craigslist!
+			</h4>
+			<form name="price-make" action="getAveragePriceForMake.php" method="post"
+			target="price-make-results">
+				<label for="make">Choose a make:</label>
+				<select name="make" id="make-input">
+					<option value="bmw">BMW</option>
+					<option value="chevrolet">Chevrolet</option>
+					<option value="ford">Ford</option>
+					<option value="honda">Honda</option>
+					<option value="hyundai">Hyundai</option>
+					<option value="infiniti">Infiniti</option>
+					<option value="mercedes-benz">Mercedes-Benz</option>
+					<option value="nissan">Nissan</option>
+					<option value="ram">Ram</option>
+					<option value="rover">Rover</option>
+					<option value="toyota">Toyota</option>
+					<option value="volkswagen">Volkswagen</option>
+				</select> 
+				<input type="submit">
+			</form>
+			<iframe class="result-panel" id="price-make-results" name="price-make-results" width=250px height=100px></iframe>
+		</div>
+
+		<div id="averageAgeForCarsBasedOnFuel" class="query">
+			<h2> Average age of cars based on whether they use regular or premium fuel</h2>
+			<form name="age-premium" action="getAverageAgeForCarsBasedOnFuel.php" method="post"
+			target="age-premium-results">
+			<label for="fuelType">Choose a fuel type:</label>
+				<select name="fuelType" id="fuel-input">
+					<option value="regular">Regular</option>
+					<option value="premium">Premium</option>
+				</select>
+			<input type="submit">
+			</form>
+			<iframe class="result-panel" id="age-premium-results" name="age-premium-results" width=200px height=100px></iframe>
+		</div>
+
+		<div id="minimumWageAndAveragePrices" class="query">
+			<h2> Click to show minimum wages across the US, along with the average price of cars in that state!</h2>
+			<h4> After clicking submit, click to show graphs of the data!</h4>
+			<form name="wagecarprice" action="getAllStatesMinWagesAndAvgCarPrice.php" method="post"
+			target="wage-carprice-results">
+				State: <input class="state-input" id="wage-state-input" type="text" name="state"> <br/>
+				<input type="submit">
+				<button id="show-wagegraph-button" onclick="displayWageCharts()">Show graphs!</button>
+			</form>
+			<iframe class="result-panel" id="wage-carprice-results" name="wage-carprice-results" width=400px height=300px></iframe>
+			<div id="wage-chart" style="height: 370px; width: 60%;"></div>
+			<div id="carprice-chart" style="height: 370px; width: 60%;"></div>
+		</div>
+
+		<div id="JapaneseCarsAndBidenCounties" class="query">
+			<h2> Number of counties that voted for Biden in state with most Japanese cars</h2>
+			<form name="biden-japan" action="getJapaneseCarsAndBidenCounties.php" method="post"
+			target="biden-japan-results">
+			<input type="submit">
+			</form>
+			<iframe class="result-panel" id="biden-japan-results" name="biden-japan-results" width=150px height=100px></iframe>
+
+		</div>
+			
+		<div>
+			<h2> Where can I find a Chevy? </h2>
+			<h4> Lists counties in the US where a Chevy is being sold</h4>
+			<form action="prepare9.php" target="frame9">
+				<input type="submit" value="Submit Query">
+			</form>
+			<br/><br/>
+			<iframe name="frame9">
+			</iframe>
+		</div>
+		<div>	
+			<h2>List the effective minimum wage of every state and the presidential candidate who recieved the most votes by county in that state</h2>
+			<form action="prepare10.php" target="frame10">
+				<input type="submit" value="Submit Query">
+			</form>
+			<br/><br/>
+			<iframe name="frame10" style="width: 400px; height: 475px;">
+			</iframe>
+		</div>
+
+		<div>
+			<h2>List the average annual fuel cost grouped by fuel type</h2>
+			<form action="prepare11.php" target="frame11">
+				<input type="submit" value="Submit Query">
+			</form>
+			<br/><br/>
+			<iframe name="frame11">
+			</iframe>
+		</div>
+		
+		<div>
+			<h2> Find each year's average listing price</h2>
+			<form name="pricetrends-form"action="prepare12.php" target="pricetrends-results">
+				<input type="submit" value="Submit Query">
+				<button id="show-pricetrendsgraph-button" onclick="displayPriceTrendsChart()">Show graph!</button>
+			</form>
+			<br/><br/>
+			<iframe id="pricetrends-results" name="pricetrends-results">
+			</iframe>
+			<div id="pricetrends-chart" style="height: 370px; width: 60%;"></div>
+		</div>
+
+		<div>
+			<h2> Find the most expensive car listed. Get it's make, model, year, and listing url
+			</h2>
+			<form action="prepare13.php" target="frame13">
+				<input type="submit" value="Submit Query">
+			</form>
+			<br/><br/>
+			<iframe name="frame13" style="width: 600px;">
+			</iframe>
+			<br/><br/>
+		</div>
+		
+		<div>
+			<h2> "Hours-to-buy" estimator
+			</h2>
+			<h4>Select a state to find how many hours of minimum wage labor
+				it would take to afford the cheapest car listed there, 
+				according to the state's minimum wage</h4>
+				<form name="fourteen" action="prepare14.php" method="post"
+				target="frame14">
+				State: <input id="hours-to-buy-input" type="text" name="state"> <br/>
+				<input type="submit">
+			</form>
+		</div>
+		
+		<br/><br/>
+
+		<div>
+			<div id="hours-to-buy-map" style="width: 500px; height: 300px;"></div>
+			<iframe name="frame14">
+			</iframe>
+		</div>
+		
+		<br/><br/>
+
+		<div>
+			<h2> Get the make and model of the most popular vehicle listed in the database</h2>
+			<form action="prepare15.php" target="frame15">
+				<input type="submit" value="Submit Query">
+			</form>
+			<br/><br/>
+			<iframe name="frame15">
+			</iframe>
+		</div>
+
+		<div id="averageHighwayMPGForMinWage" class="query">
+			<h2> Average highway mpg of the cars listed in every state that has a minimum wage above $10</h2>
+			<form name="mpg-minwage" action="getAverageHighwayMPGForMinWage.php" method="post"
+			target="mpg-minwage-results">
+			<input type="submit">
+			</form>
+			<iframe class="result-panel" id="mpg-minwage-results" name="mpg-minwage-results" width=600px height=400px></iframe>
+
+		</div>
+
+	</div>
+	<br/><br/>
+	</body>
+</html>
